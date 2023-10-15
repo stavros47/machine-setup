@@ -1,0 +1,57 @@
+---
+- name: Install pyenv dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - build-essential
+    - libssl-dev
+    - zlib1g-dev
+    - libbz2-dev
+    - libreadline-dev
+    - libsqlite3-dev
+    - wget
+    - curl
+    - llvm
+    - libncurses5-dev
+    - libncursesw5-dev
+    - xz-utils
+    - tk-dev
+    - libffi-dev
+    - liblzma-dev
+    - python3-openssl
+    - git
+  become: yes
+  tags:
+    - pyenv
+
+- name: Check if pyenv is already installed
+  stat:
+    path: ~/.pyenv
+  register: pyenv_installed
+  become: yes
+  tags:
+    - pyenv
+
+- name: Install pyenv
+  shell: |
+    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+    echo 'eval "$(pyenv init --path)"' >> ~/.zshrc
+  args:
+    executable: /bin/zsh
+  become: yes
+  when: not pyenv_installed.stat.exists
+  tags:
+    - pyenv
+
+- name: Update pyenv
+  shell: |
+    cd ~/.pyenv && git pull
+  args:
+    executable: /bin/zsh
+  become: yes
+  when: pyenv_installed.stat.exists
+  tags:
+    - pyenv

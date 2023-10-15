@@ -1,0 +1,6 @@
+---
+- name: Install Oh My ZSH
+  hosts: localhost
+  become: yes
+  roles:
+    - oh_my_zsh

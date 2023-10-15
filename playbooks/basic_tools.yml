@@ -1,0 +1,6 @@
+--
+- name: Install Basic Tools
+  hosts: localhost
+  become: no
+  roles:
+    - basic_tools

@@ -1,0 +1,6 @@
+--
+- name: Install Basic Python Tools
+  hosts: localhost
+  become: yes
+  roles:
+    - python_tools

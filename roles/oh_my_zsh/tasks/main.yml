@@ -1,0 +1,38 @@
+---
+- name: Install Powerline fonts
+  apt:
+    name: fonts-powerline
+    state: present
+  become: yes
+  tags:
+    - oh_my_zsh
+
+- name: Check if oh-my-zsh is already installed
+  stat:
+    path: "{{ ansible_user_dir }}/.oh-my-zsh"
+  register: oh_my_zsh_installed
+
+- name: Install oh-my-zsh
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  args:
+    executable: /bin/bash
+  when: not oh_my_zsh_installed.stat.exists
+  tags:
+    - oh_my_zsh
+
+
+- name: Set oh-my-zsh theme to 'agnoster'
+  lineinfile:
+    path: "{{ ansible_user_dir }}/.zshrc"
+    regexp: '^ZSH_THEME='
+    line: 'ZSH_THEME="agnoster"'
+  tags:
+    - oh_my_zsh
+
+- name: Add plugins to oh-my-zsh
+  lineinfile:
+    path: "{{ ansible_user_dir }}/.zshrc"
+    regexp: '^plugins='
+    line: 'plugins=(git docker python)'
+  tags:
+    - oh_my_zsh

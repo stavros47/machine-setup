@@ -1,0 +1,11 @@
+- name: Master playbook to set up a new Linux machine
+  hosts: localhost
+  become: no
+  vars_prompt:
+    - name: "my_password"
+      prompt: "Enter password"
+      private: yes
+  roles:
+    - basic_tools
+    - oh_my_zsh
+    - python_tools
